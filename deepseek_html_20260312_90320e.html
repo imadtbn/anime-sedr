@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أمين صدار - الموقع الشخصي</title>
+    <!-- Font Awesome 6 (مجاني) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: خط عصري وجميل -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth; /* سلاسة التنقل */
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #1e2a41;
+            line-height: 1.6;
+        }
+        /* شريط التمرير (سلايدر) */
+        .slider-bar {
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff7b00, #ffaa00, #00a6ff, #b200ff);
+            animation: slideColors 8s infinite alternate;
+        }
+        @keyframes slideColors {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        /* الهيدر الاحترافي */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            flex-wrap: wrap;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            font-size: 2rem;
+            color: #ff7b00;
+            background: linear-gradient(135deg, #ff7b00, #ff5500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #1e2a41, #ff7b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #1e2a41;
+            font-weight: 600;
+            transition: 0.3s;
+            padding: 8px 12px;
+            border-radius: 30px;
+        }
+        .nav-links a:hover {
+            background: #ff7b00;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 123, 0, 0.3);
+        }
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ff7b00;
+        }
+        /* سلايدر (شريط عرض الصور) */
+        .hero-slider {
+            position: relative;
+            height: 90vh;
+            min-height: 500px;
+            overflow: hidden;
+        }
+        .slider-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+            animation: fadeUp 1s;
+        }
+        @keyframes fadeUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .slide-content h2 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 10px black;
+        }
+        .slide-content p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #ff7b00;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #ff5500;
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 85, 0, 0.4);
+        }
+        .slider-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .slider-dot.active {
+            background: #ff7b00;
+            transform: scale(1.3);
+        }
+        /* الأقسام العامة */
+        section {
+            padding: 80px 8%;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        .section-title span {
+            background: linear-gradient(135deg, #1e2a41, #ff7b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section-title::after {
+            content: '';
+            width: 100px;
+            height: 4px;
+            background: #ff7b00;
+            display: block;
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+        /* بطاقة التعريف */
+        .about-card {
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.1);
+            padding: 50px;
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            flex-wrap: wrap;
+            transition: transform 0.3s;
+        }
+        .about-card:hover {
+            transform: translateY(-10px);
+        }
+        .about-img {
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+        }
+        .about-img img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 50%;
+            border: 5px solid #ff7b00;
+            box-shadow: 0 20px 40px rgba(255, 123, 0, 0.3);
+            transition: 0.5s;
+        }
+        .about-img img:hover {
+            transform: scale(1.03) rotate(2deg);
+        }
+        .about-text {
+            flex: 2;
+        }
+        .about-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .about-text p {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .about-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat i {
+            font-size: 2.5rem;
+            color: #ff7b00;
+        }
+        .stat h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        /* ألبوم الصور (شبكة) */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            height: 300px;
+            transition: 0.4s;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            transition: 0.4s;
+        }
+        .gallery-item:hover .overlay {
+            bottom: 0;
+        }
+        /* أعمال ونشاطات */
+        .activities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .activity-card {
+            background: white;
+            border-radius: 30px;
+            padding: 35px 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: 0.3s;
+        }
+        .activity-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 50px rgba(255, 123, 0, 0.3);
+        }
+        .activity-card i {
+            font-size: 3.5rem;
+            color: #ff7b00;
+            margin-bottom: 20px;
+        }
+        .activity-card h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        /* البطاقات التحفيزية */
+        .motivation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.03) translateY(-10px);
+            box-shadow: 0 30px 50px rgba(255, 123, 0, 0.4);
+        }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .card-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        /* النوافذ المنبثقة (Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.7);
+            transition: 0.3s;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-content img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #ff7b00;
+            margin-bottom: 20px;
+        }
+        .close {
+            position: absolute;
+            top: 15px; left: 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #888;
+            transition: 0.2s;
+        }
+        .close:hover {
+            color: #ff7b00;
+        }
+        /* الفوتر 3 أعمدة */
+        footer {
+            background: #1e2a41;
+            color: #eee;
+            padding: 60px 8% 20px;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #ff7b00;
+        }
+        .footer-col ul {
+            list-style: none;
+        }
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+        .footer-col ul li i {
+            margin-left: 10px;
+            color: #ff7b00;
+        }
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-block;
+            width: 45px; height: 45px;
+            background: #2a3a5e;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            color: white;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+        .social-links a:hover {
+            background: #ff7b00;
+            transform: translateY(-5px) rotate(10deg);
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #445;
+            font-size: 1rem;
+        }
+        /* تجاوب مع الهاتف */
+        @media (max-width: 900px) {
+            .header-container {
+                padding: 15px 5%;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                background: white;
+                padding: 20px;
+                border-radius: 20px;
+                margin-top: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .slide-content h2 {
+                font-size: 2.5rem;
+            }
+            .about-card {
+                padding: 30px;
+                flex-direction: column;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .social-links {
+                justify-content: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            .about-text h3 {
+                font-size: 2rem;
+            }
+        }
+        /* تأثيرات إضافية */
+        .highlight {
+            color: #ff7b00;
+            font-weight: bold;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ff7b00;
+            color: #ff7b00;
+        }
+        .btn-outline:hover {
+            background: #ff7b00;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط سلايدر صغير متحرك (slider bar) -->
+    <div class="slider-bar"></div>
+
+    <!-- الهيدر -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>أمين صدار</h1>
+            </div>
+            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+            <nav class="nav-links">
+                <a href="#home">الرئيسية</a>
+                <a href="#about">تعريف</a>
+                <a href="#gallery">ألبوم الصور</a>
+                <a href="#activities">أعمال ونشاطات</a>
+                <a href="#motivation">تحفيز</a>
+                <a href="#contact">اتصل بي</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- سلايدر رئيسي (hero slider) -->
+    <section id="home" class="hero-slider">
+        <div class="slider-container">
+            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');">
+                <div class="slide-content">
+                    <h2>أمين صدار</h2>
+                    <p>شاب وسيم، طموح، يحب العمل والتكنولوجيا</p>
+                    <a href="#about" class="btn">تعرف عليّ <i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');">
+                <div class="slide-content">
+                    <h2>شغوف بالمطالعة</h2>
+                    <p>أقرأ لأطور ذاتي وأحقق أحلامي</p>
+                    <a href="#gallery" class="btn">اكتشف المزيد</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');">
+                <div class="slide-content">
+                    <h2>عاشق للتكنولوجيا</h2>
+                    <p>أبتكر وأطور حلولاً رقمية مذهلة</p>
+                    <a href="#activities" class="btn">أعمالي</a>
+                </div>
+            </div>
+        </div>
+        <div class="slider-nav">
+            <span class="slider-dot active" data-index="0"></span>
+            <span class="slider-dot" data-index="1"></span>
+            <span class="slider-dot" data-index="2"></span>
+        </div>
+    </section>
+
+    <!-- قسم التعريف -->
+    <section id="about">
+        <h2 class="section-title"><span>تعريف</span> عن أمين</h2>
+        <div class="about-card">
+            <div class="about-img">
+                <!-- صورة شاب وسيم (placeholder) -->
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="أمين صدار">
+            </div>
+            <div class="about-text">
+                <h3>أمين صدار <span class="highlight">الوسيم</span></h3>
+                <p>أنا أمين، شاب في العشرينات من عمري، أؤمن بأن النجاح يبدأ من الداخل. أحب <strong>الدراسة، المطالعة، العمل الجاد، والتكنولوجيا</strong>. أسعى دائمًا لتطوير مهاراتي والمساهمة في بناء مستقبل أفضل. أتمتع بوسامة وحضور قوي، لكن طموحي أكبر من أي شيء.</p>
+                <div class="about-stats">
+                    <div class="stat"><i class="fas fa-book-open"></i><h4>100+</h4><p>كتاب مقروء</p></div>
+                    <div class="stat"><i class="fas fa-laptop-code"></i><h4>50+</h4><p>مشروع تقني</p></div>
+                    <div class="stat"><i class="fas fa-heart"></i><h4>1000+</h4><p>ساعة تطوع</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ألبوم الصور -->
+    <section id="gallery">
+        <h2 class="section-title"><span>ألبوم</span> الصور</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="صورة أمين"><div class="overlay">في قمة السعادة</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1543269664-7eef42226a21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="أمين يقرأ"><div class="overlay">لحظة مطالعة</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1172&q=80" alt="أمين يعمل"><div class="overlay">في ورشة عمل</div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1556157382-97eda2f9e2bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="تكنولوجيا"><div class="overlay">مع أحدث الأجهزة</div></div>
+        </div>
+    </section>
+
+    <!-- أعمال ونشاطات -->
+    <section id="activities">
+        <h2 class="section-title"><span>أعمالي</span> ونشاطاتي</h2>
+        <div class="activities">
+            <div class="activity-card"><i class="fas fa-briefcase"></i><h3>مشاريع حرة</h3><p>أنجزت أكثر من 30 مشروعًا تقنيًا لشركات ناشئة.</p></div>
+            <div class="activity-card"><i class="fas fa-chalkboard-teacher"></i><h3>محاضرات</h3><p>أقدم دورات مجانية في البرمجة والتطوير الذاتي.</p></div>
+            <div class="activity-card"><i class="fas fa-running"></i><h3>أنشطة رياضية</h3><p>أمارس الرياضة يوميًا وأشارك في ماراثونات.</p></div>
+            <div class="activity-card"><i class="fas fa-pencil-alt"></i><h3>كتابة</h3><p>أكتب مقالات تحفيزية وتقنية في مدونتي.</p></div>
+        </div>
+    </section>
+
+    <!-- بطاقات تحفيزية مع نوافذ منبثقة -->
+    <section id="motivation">
+        <h2 class="section-title"><span>بطاقات</span> تحفيزية</h2>
+        <div class="motivation-cards">
+            <div class="card" data-modal="modal1">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="تحفيز 1">
+                <div class="card-content"><h3>النجاح يبدأ بخطوة</h3></div>
+            </div>
+            <div class="card" data-modal="modal2">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80" alt="تحفيز 2">
+                <div class="card-content"><h3>العلم نور</h3></div>
+            </div>
+            <div class="card" data-modal="modal3">
+                <img src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="تحفيز 3">
+                <div class="card-content"><h3>الإرادة تصنع المعجزات</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- النوافذ المنبثقة (مودال) -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="أمين">
+            <h2>النجاح يبدأ بخطوة</h2>
+            <p>كل رحلة تبدأ بخطوة صغيرة. أمين يؤمن بأن المثابرة والتحرك الدائم هما مفتاح تحقيق الأهداف. ابدأ الآن!</p>
+        </div>
+    </div>
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="مطالعة">
+            <h2>العلم نور</h2>
+            >بالعلم ترتقي الأمم. أمين يقرأ باستمرار ويشجعك على اقتناء كتاب كل أسبوع.</p>
+        </div>
+    </div>
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="إرادة">
+            <h2>الإرادة تصنع المعجزات</h2>
+            <p>لا شيء مستحيل مع الإرادة القوية. أمين يحول التحديات إلى فرص، وأنت أيضًا تستطيع!</p>
+        </div>
+    </div>
+
+    <!-- الفوتر 3 أعمدة -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>أمين صدار</h4>
+                <p>شاب طموح، وسيم، أحب التحديات وأسعى لترك بصمة في عالم التكنولوجيا.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><i class="fas fa-angle-left"></i> <a href="#home" style="color:#fff; text-decoration:none;">الرئيسية</a></li>
+                    <li><i class="fas fa-angle-left"></i> <a href="#about" style="color:#fff; text-decoration:none;">تعريف</a></li>
+                    <li><i class="fas fa-angle-left"></i> <a href="#gallery" style="color:#fff; text-decoration:none;">ألبوم الصور</a></li>
+                    <li><i class="fas fa-angle-left"></i> <a href="#activities" style="color:#fff; text-decoration:none;">أعمال ونشاطات</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>اتصل بي</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> الجزائر - العاصمة</li>
+                    <li><i class="fas fa-phone"></i> +213 123 45 67 89</li>
+                    <li><i class="fas fa-envelope"></i> amine.seddar@email.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 أمين صدار. كل الحقوق محفوظة. صمم بكل ❤️
+        </div>
+    </footer>
+
+    <script>
+        // قائمة الهاتف
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // سلايدر الصور (hero)
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        let currentSlide = 0;
+        const slideInterval = 5000; // 5 ثوان
+
+        function showSlide(index) {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === index);
+            });
+            dots.forEach((d, i) => {
+                d.classList.toggle('active', i === index);
+            });
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            let next = (currentSlide + 1) % slides.length;
+            showSlide(next);
+        }
+
+        // تشغيل السلايدر التلقائي
+        let timer = setInterval(nextSlide, slideInterval);
+
+        // النقر على النقاط
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clearInterval(timer);
+                showSlide(index);
+                timer = setInterval(nextSlide, slideInterval);
+            });
+        });
+
+        // إيقاف السلايدر عند تمرير الماوس (اختياري)
+        const slider = document.querySelector('.hero-slider');
+        slider.addEventListener('mouseenter', () => clearInterval(timer));
+        slider.addEventListener('mouseleave', () => {
+            timer = setInterval(nextSlide, slideInterval);
+        });
+
+        // النوافذ المنبثقة (مودال)
+        const cards = document.querySelectorAll('.card');
+        const modals = document.querySelectorAll('.modal');
+        const closes = document.querySelectorAll('.close');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const modalId = card.getAttribute('data-modal');
+                document.getElementById(modalId).classList.add('show');
+            });
+        });
+
+        closes.forEach(close => {
+            close.addEventListener('click', () => {
+                modals.forEach(modal => modal.classList.remove('show'));
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // إغلاق القائمة عند النقر على رابط (للهاتف)
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // تحسين التمرير للروابط (سلاسة)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
